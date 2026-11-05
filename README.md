@@ -2,7 +2,7 @@
 
 Painel interativo da agenda das parceiras Conecta, Start e Engelmig (05/11 a 05/12/2026, 390 programações).
 
-**Tudo fica dentro do `index.html`**: dados, gráficos, filtros e a biblioteca D3. Não depende de outras pastas nem de internet. Basta esse arquivo estar na raiz do repositório.
+**Tudo fica dentro do `index.html`**, com os números e gráficos já gravados no próprio HTML. Eles aparecem mesmo se o JavaScript estiver bloqueado; nesse caso surge uma faixa amarela avisando que filtros, abas e relógio ficam indisponíveis. O arquivo também traz os dados, os filtros e a biblioteca D3. Não depende de outras pastas nem de internet. Basta esse arquivo estar na raiz do repositório.
 
 ## Publicar no GitHub Pages
 
@@ -20,7 +20,9 @@ Painel interativo da agenda das parceiras Conecta, Start e Engelmig (05/11 a 05/
 
 - Confira se o `index.html` está na raiz. Se estiver dentro de uma pasta, o endereço muda para `.../<repositorio>/<pasta>/`.
 - Apague do repositório os arquivos da versão anterior: `assets/`, `data/` e o `index.html` antigo.
-- Se o painel encontrar algum erro ao carregar, ele mostra uma faixa vermelha no topo com a mensagem.
+- Faixa vermelha no topo: erro ao montar o painel (envie a mensagem para correção).
+- Faixa amarela no topo: o JavaScript está bloqueado pelo navegador ou pela rede. Os números aparecem, mas sem filtros.
+- O rodapé mostra a **versão** (data e hora). Use isso para confirmar que o GitHub já publicou o arquivo novo.
 
 > **Atenção:** em repositório público, os dados (projetos, equipamentos, PowerON) ficam visíveis para qualquer pessoa.
 
