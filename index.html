@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programação das Parceiras · Conecta, Start e Engelmig</title>
+<style>
+:root{
+  color-scheme:light;
+  --font-anthropic-sans:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-anthropic-serif:Georgia,"Times New Roman",serif;
+  --color-fg:#1a1a19;--color-fg-muted:#5f5e5a;--color-bg:#f7f7f5;--color-panel:#ffffff;--color-border-line:#e3e2dd;
+  --color-ok:#1d7a3a;--color-warn:#a86500;--color-bad:#c4302b;
+  --cds-chart-muted:#b4b2a9;--cds-chart-grid:#ecebe6;--cds-chart-axis:#a3a29b;--cds-chart-reference:#7d7c76;--cds-chart-status-critical:#e34948;
+  --cds-surface-popover:#ffffff;--cds-border:#dddcd6;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.12);--cds-text-secondary:#5f5e5a;
+  --cds-font-size-caption:12px;--cds-font-size-body:14px;--cds-font-size-heading:16px;--cds-font-size-title:28px;--cds-font-weight-medium:600;
+  --cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:16px;--cds-gap-lg:24px;--cds-gap-xl:32px;
+  --cds-pad-xs:6px;--cds-pad-sm:10px;--cds-pad-md:14px;--cds-pad-lg:20px;--cds-pad-xl:28px;
+  --cds-radius:8px;--cds-dur-slow:.3s;--cds-ease-out:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --color-fg:#f0efec;--color-fg-muted:#b0afa8;--color-bg:#141413;--color-panel:#1f1f1d;--color-border-line:#33322f;
+    --color-ok:#5cc27a;--color-warn:#e0a338;--color-bad:#ef6b66;
+    --cds-chart-muted:#6b6a64;--cds-chart-grid:#2c2b28;--cds-chart-axis:#5d5c56;--cds-chart-status-critical:#e66767;
+    --cds-surface-popover:#262624;--cds-border:#3a3936;--cds-shadow-popover:0 6px 20px rgba(0,0,0,.5);--cds-text-secondary:#b0afa8;
+  }
+}
+html,body{margin:0;background:var(--color-bg)}
+#dash-root{max-width:1440px;margin:0 auto;padding:24px clamp(12px,3vw,32px) 48px}
+.pg-foot{font-family:var(--font-anthropic-sans);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);text-align:center;margin-top:var(--cds-gap-lg)}
+</style>
+<style>
+.pg{font-family:var(--font-anthropic-sans);color:var(--color-fg);display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+.pg-head h1{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);margin:0 0 var(--cds-gap-xs)}
+.pg-head p{margin:0;color:var(--color-fg-muted);font-size:var(--cds-font-size-body);max-width:70rem;line-height:1.5}
+.pg .pg-head b{color:var(--color-fg);font-weight:600}
+.pg-filters{display:flex;flex-wrap:wrap;gap:var(--cds-gap-sm);align-items:flex-end;background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md)}
+.pg-filters label{display:flex;flex-direction:column;gap:4px;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);min-width:9rem;flex:1 1 9rem}
+.pg-filters select,.pg-filters input{font:inherit;font-size:var(--cds-font-size-body);color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:6px 8px;min-height:34px}
+.pg-btn{font:inherit;font-size:var(--cds-font-size-body);color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:6px 14px;min-height:34px;cursor:pointer}
+.pg-btn:hover{border-color:var(--color-fg-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10.5rem),1fr));gap:var(--cds-gap-md)}
+.pg-kpi{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-md) var(--cds-pad-lg)}
+.pg-kpi .lab{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.pg-kpi .val{font-family:var(--font-anthropic-serif);font-weight:400;font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;margin:4px 0 2px;line-height:1.15}
+.pg-kpi .sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);font-variant-numeric:tabular-nums}
+.pg-tabs{display:flex;gap:var(--cds-gap-xs);border-bottom:1px solid var(--color-border-line);flex-wrap:wrap}
+.pg-tab{font:inherit;font-size:var(--cds-font-size-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--color-fg-muted);padding:8px 12px;cursor:pointer;margin-bottom:-1px}
+.pg-tab[aria-selected="true"]{color:var(--color-fg);border-bottom-color:var(--color-fg);font-weight:var(--cds-font-weight-medium)}
+.pg-sec{display:flex;flex-direction:column;gap:var(--cds-gap-md)}
+.pg-sec[hidden],.pg-tip[hidden]{display:none}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,26rem),1fr));gap:var(--cds-gap-md)}
+.pg-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);min-width:0}
+.pg-card h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0}
+.pg-card .note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin:4px 0 var(--cds-gap-md);line-height:1.45}
+.pg-chart{position:relative;min-height:120px}
+.pg-legend{display:flex;gap:var(--cds-gap-md);flex-wrap:wrap;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-bottom:var(--cds-gap-sm)}
+.pg-legend span{display:inline-flex;align-items:center;gap:6px}
+.pg-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.pg-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:var(--cds-radius);box-shadow:var(--cds-shadow-popover);padding:var(--cds-pad-xs) var(--cds-pad-sm);font-size:var(--cds-font-size-caption);white-space:nowrap;z-index:5;font-variant-numeric:tabular-nums}
+.pg-tip .h{color:var(--cds-text-secondary);margin-bottom:2px}
+.pg-tip .r{display:flex;align-items:center;gap:6px}
+.pg-tip .r i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.pg-tip .r b{margin-left:auto;padding-left:12px;font-weight:600}
+.pg-chart svg text{font-family:var(--font-anthropic-sans);font-size:var(--cds-font-size-caption);fill:var(--color-fg-muted)}
+.pg-chart svg .lbl{fill:var(--color-fg)}
+.pg-chart .hit{cursor:pointer}
+.pg-tablewrap{overflow:auto;max-height:32rem;border:1px solid var(--color-border-line);border-radius:var(--cds-radius)}
+.pg table{border-collapse:collapse;width:100%;font-size:var(--cds-font-size-caption);font-variant-numeric:tabular-nums}
+.pg th{position:sticky;top:0;background:var(--color-panel);text-align:left;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);padding:8px 10px;border-bottom:1px solid var(--color-border-line);white-space:nowrap;z-index:1}
+.pg th.num,.pg td.num{text-align:right}
+.pg td{white-space:nowrap;padding:7px 10px;border-bottom:1px solid var(--color-border-line);vertical-align:top}
+.pg tbody tr:hover td{background:var(--color-bg)}
+.pg .sortable{cursor:pointer;user-select:none}
+.pg .click tr{cursor:pointer}
+.pg .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.pg .bad{color:var(--color-bad)}
+.pg .warn{color:var(--color-warn)}
+.pg-qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--cds-gap-sm)}
+.pg-q{border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-sm) var(--cds-pad-md);background:var(--color-bg)}
+.pg-q .n{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;line-height:1.1}
+.pg-q .t{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);margin-top:2px;line-height:1.35}
+.pg-q.err .n{color:var(--color-bad)}
+.pg-q.att .n{color:var(--color-warn)}
+.pg-toolbar{display:flex;gap:var(--cds-gap-sm);align-items:center;flex-wrap:wrap;margin-bottom:var(--cds-gap-sm)}
+.pg-toolbar input{font:inherit;font-size:var(--cds-font-size-body);color:var(--color-fg);background:var(--color-bg);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:6px 10px;min-width:min(100%,18rem);flex:1 1 18rem}
+.pg-toolbar .cnt{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.pg ul.pg-notes{margin:0;padding-left:1.1rem;font-size:var(--cds-font-size-body);line-height:1.55}
+.pg ul.pg-notes li{margin-bottom:6px}
+.pg-headrow{display:flex;gap:var(--cds-gap-md);align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.pg-clock{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-sm) var(--cds-pad-md);text-align:right;min-width:12rem}
+.pg-clock .lab{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.pg-clock .hora{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title);font-variant-numeric:tabular-nums;line-height:1.15}
+.pg-clock .dia{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);text-transform:capitalize}
+.pg-proj{border-top:1px solid var(--color-border-line);padding-top:var(--cds-gap-lg)}
+[data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+</style>
+</head>
+<body>
+<div id="dash-root">
+
+<div class="pg">
+  <header class="pg-head" id="topo">
+    <div class="pg-headrow">
+    <h1>Programação das parceiras · Conecta, Start e Engelmig</h1>
+    <div class="pg-clock" id="relogio" aria-live="off"><div class="lab">Agora · horário de Brasília</div><div class="hora" data-draw="relogio-hora">—</div><div class="dia" data-draw="relogio-dia">—</div></div>
+    </div>
+    <p>Agenda de <b data-draw="t-periodo" data-source="prog">—</b>: <b data-draw="k-total-txt" data-source="prog">—</b> programações no recorte. <b data-draw="t-lider" data-source="prog">—</b> concentra a maior parte da agenda e <b data-draw="t-canc" data-source="prog">—</b> tem a maior taxa de cancelamento. Status mostram a situação da agenda, não execução concluída.</p>
+  </header>
+
+  <div class="pg-filters" id="filtros">
+    <label>Parceira<select class="f-sel" data-p="parceira" data-draw="f-sel" data-source="prog" aria-label="Parceira"></select></label>
+    <label>Região<select class="f-sel" data-p="regiao" data-draw="f-sel" data-source="prog" aria-label="Região"></select></label>
+    <label>Tipo de intervenção<select class="f-sel" data-p="tipo" data-draw="f-sel" data-source="prog" aria-label="Tipo de intervenção"></select></label>
+    <label>Status<select class="f-sel" data-p="status" data-draw="f-sel" data-source="prog" aria-label="Status"></select></label>
+    <label>De<input class="f-date" data-p="de" type="date" min="2000-01-01" max="2099-12-31" aria-label="Data inicial"></label>
+    <label>Até<input class="f-date" data-p="ate" type="date" min="2000-01-01" max="2099-12-31" aria-label="Data final"></label>
+    <button class="pg-btn f-reset" type="button">Limpar filtros</button>
+  </div>
+
+  <div class="pg-kpis" id="indicadores">
+    <div class="pg-kpi"><div class="lab">Programações</div><div class="val" data-draw="k-total" data-source="prog">—</div><div class="sub"><span data-draw="k-proj" data-source="prog">—</span> projetos distintos</div></div>
+    <div class="pg-kpi"><div class="lab">Canceladas</div><div class="val" data-draw="k-canc" data-source="prog">—</div><div class="sub">Taxa de cancelamento <span data-draw="k-taxa" data-source="prog">—</span></div></div>
+    <div class="pg-kpi"><div class="lab">Liberadas para execução</div><div class="val" data-draw="k-exec" data-source="prog">—</div><div class="sub"><span data-draw="k-exec-p" data-source="prog">—</span> do recorte</div></div>
+    <div class="pg-kpi"><div class="lab">Liberadas para documentação</div><div class="val" data-draw="k-doc" data-source="prog">—</div><div class="sub"><span data-draw="k-doc-p" data-source="prog">—</span> do recorte</div></div>
+    <div class="pg-kpi"><div class="lab">Rascunho + pendente</div><div class="val" data-draw="k-pend" data-source="prog">—</div><div class="sub">Aguardando aprovação ou edição</div></div>
+    <div class="pg-kpi"><div class="lab">Janelas previstas (h)</div><div class="val" data-draw="k-horas" data-source="prog">—</div><div class="sub">Média <span data-draw="k-jmed" data-source="prog">—</span> h por programação</div></div>
+    <div class="pg-kpi"><div class="lab">Média por dia</div><div class="val" data-draw="k-media" data-source="prog">—</div><div class="sub">Pico de <span data-draw="k-pico" data-source="prog">—</span></div></div>
+  </div>
+
+  <nav class="pg-tabs" role="tablist" aria-label="Seções">
+    <button class="pg-tab" role="tab" type="button" data-tab="visao" aria-selected="true">Visão geral</button>
+    <button class="pg-tab" role="tab" type="button" data-tab="territorio" aria-selected="false">Território e intervenções</button>
+    <button class="pg-tab" role="tab" type="button" data-tab="qualidade" aria-selected="false">Qualidade dos dados</button>
+    <button class="pg-tab" role="tab" type="button" data-tab="base" aria-selected="false">Base detalhada</button>
+  </nav>
+
+  <section class="pg-sec" id="visao" data-sec="visao">
+    <div class="pg-card" id="card-diario">
+      <h2>Volume diário por parceira</h2>
+      <p class="note">Programações por data, empilhadas por parceira. Faixas sombreadas são fins de semana. Passe o mouse para ver canceladas do dia.</p>
+      <div class="pg-legend"><span><i class="sw-c"></i>Conecta</span><span><i class="sw-s"></i>Start</span><span><i class="sw-e"></i>Engelmig</span></div>
+      <div class="pg-chart" data-draw="c-diario" data-source="prog">—</div>
+    </div>
+    <div class="pg-card" id="card-parceiras">
+      <h2>Comparativo das parceiras</h2>
+      <p class="note">Clique numa linha para filtrar a parceira. Compare taxas, não só volumes: cada parceira atua em territórios e tipos diferentes.</p>
+      <div class="pg-tablewrap">
+        <table class="click" data-source="prog">
+          <thead><tr><th>Parceira</th><th class="num">Programações</th><th class="num">Participação</th><th class="num">Canceladas</th><th class="num">% canceladas</th><th class="num">Lib. execução</th><th class="num">Lib. documentação</th><th class="num">Pend. + rascunho</th><th class="num">Janelas (h)</th><th class="num">Janela média (h)</th><th class="num">Projetos</th><th class="num">Dias com agenda</th></tr></thead>
+          <tbody data-draw="c-parceiras"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pg-grid">
+      <div class="pg-card" id="card-status">
+        <h2>Status da programação</h2>
+        <p class="note">Clique numa barra para filtrar. Canceladas em destaque.</p>
+        <div class="pg-chart" data-draw="c-status" data-source="prog">—</div>
+      </div>
+      <div class="pg-card" id="card-semana">
+        <h2>Dia da semana</h2>
+        <p class="note">Programações por dia da semana, empilhadas por parceira; à direita, a média por dia de calendário no período.</p>
+        <div class="pg-chart" data-draw="c-semana" data-source="prog">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec" id="territorio" data-sec="territorio" hidden>
+    <div class="pg-grid">
+      <div class="pg-card" id="card-regiao">
+        <h2>Programações por região</h2>
+        <p class="note">Clique numa barra para filtrar a região. Siglas padronizadas em maiúsculas.</p>
+        <div class="pg-legend"><span><i class="sw-c"></i>Conecta</span><span><i class="sw-s"></i>Start</span><span><i class="sw-e"></i>Engelmig</span></div>
+        <div class="pg-chart" data-draw="c-regiao" data-source="prog">—</div>
+      </div>
+      <div class="pg-card" id="card-tipo">
+        <h2>Tipo de intervenção</h2>
+        <p class="note">Clique numa barra para filtrar o tipo. Siglas mantidas como cadastradas.</p>
+        <div class="pg-legend"><span><i class="sw-c"></i>Conecta</span><span><i class="sw-s"></i>Start</span><span><i class="sw-e"></i>Engelmig</span></div>
+        <div class="pg-chart" data-draw="c-tipo" data-source="prog">—</div>
+      </div>
+    </div>
+    <div class="pg-grid">
+      <div class="pg-card" id="card-descricao">
+        <h2>Natureza das obras</h2>
+        <p class="note">Descrição do projeto; a parte em vermelho são as programações canceladas.</p>
+        <div class="pg-chart" data-draw="c-descricao" data-source="prog">—</div>
+      </div>
+      <div class="pg-card" id="card-hora">
+        <h2>Horário de início das janelas</h2>
+        <p class="note">Quantidade de programações por hora de início, empilhadas por parceira.</p>
+        <div class="pg-legend"><span><i class="sw-c"></i>Conecta</span><span><i class="sw-s"></i>Start</span><span><i class="sw-e"></i>Engelmig</span></div>
+        <div class="pg-chart" data-draw="c-hora" data-source="prog">—</div>
+      </div>
+    </div>
+    <div class="pg-card" id="card-matriz">
+      <h2>Região × tipo de intervenção</h2>
+      <p class="note">Quantidade de programações em cada combinação; a cor fica mais forte com o volume.</p>
+      <div class="pg-chart" data-draw="c-matriz" data-source="prog">—</div>
+    </div>
+  </section>
+
+  <section class="pg-sec" id="qualidade" data-sec="qualidade" hidden>
+    <div class="pg-card" id="card-checks">
+      <h2>Controles de consistência</h2>
+      <p class="note">Contagens no recorte atual. Vermelho: inconsistência a corrigir na origem. Amarelo: ponto de atenção, não necessariamente erro.</p>
+      <div class="pg-qgrid">
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="Duplicata exata" data-source="prog">—</div><div class="t">Duplicata exata (todos os 11 campos iguais)</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="Início em data diferente da programada" data-source="prog">—</div><div class="t">Horário de início em data diferente da data programada</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="PowerON CANCELADO com status ativo" data-source="prog">—</div><div class="t">PowerON marcado CANCELADO, mas status ativo</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="Cancelado sem marca CANCELADO no PowerON" data-source="prog">—</div><div class="t">Status Cancelado sem marca CANCELADO no PowerON</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="Liberado p/ execução sem PowerON" data-source="prog">—</div><div class="t">Liberado para execução sem número PowerON</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="PowerON fora do padrão" data-source="prog">—</div><div class="t">PowerON fora do padrão (minúsculas ou prefixo “OS”)</div></div>
+        <div class="pg-q err"><div class="n" data-draw="q" data-q="Janela menor que 1 h" data-source="prog">—</div><div class="t">Janela prevista menor que 1 hora</div></div>
+        <div class="pg-q att"><div class="n" data-draw="q" data-q="PowerON DEVOLVIDO com status liberado" data-source="prog">—</div><div class="t">PowerON DEVOLVIDO com status liberado para execução</div></div>
+        <div class="pg-q att"><div class="n" data-draw="q" data-q="Cancelada e reprogramada depois" data-source="prog">—</div><div class="t">Canceladas que voltam reprogramadas em data posterior</div></div>
+        <div class="pg-q att"><div class="n" data-draw="q" data-q="Janela cruza meia-noite" data-source="prog">—</div><div class="t">Janelas noturnas que cruzam a meia-noite</div></div>
+      </div>
+    </div>
+    <div class="pg-card" id="card-revisao">
+      <h2>Revisão da planilha original</h2>
+      <p class="note">O que foi conferido nas abas de resumo contra a base bruta (Planilha1).</p>
+      <ul class="pg-notes">
+        <li>Os totais das abas Resumo Executivo, Volume Diário, Regiões, Intervenções, Status e Qualidade, Dinâmica Dashboard, Dashboard Interativo e Chart Data foram recalculados linha a linha a partir da base e conferem.</li>
+        <li>O nome do arquivo indica novembro a janeiro, mas a base cobre só de <b data-draw="t-periodo-all" data-source="prog">—</b>. Não há nenhuma programação em janeiro.</li>
+        <li>Regiões estão cadastradas com grafia mista (“Sul”, “oes”); aqui foram padronizadas em maiúsculas, como na planilha.</li>
+        <li>A coluna Número PowerON mistura números de ordem com textos de situação (CANCELADO, DEVOLVIDO, RESOLVIDO). Recomenda-se separar em duas colunas.</li>
+        <li>“Reforma de Rede Secundaria RTRI” aparece sem acento e separada de “Reforma de Rede Secundária”; confirmar se é categoria própria.</li>
+        <li>As horas somam janelas previstas, incluindo canceladas; não são horas de equipe nem execução realizada.</li>
+      </ul>
+    </div>
+    <div class="pg-card" id="card-ocorrencias">
+      <h2>Registros com ocorrência</h2>
+      <p class="note">Linha = linha na Planilha1 original. Inconsistências primeiro, depois pontos de atenção.</p>
+      <div class="pg-tablewrap">
+        <table data-source="prog" data-row-key="linha">
+          <thead><tr><th data-field="linha" class="num">Linha</th><th data-field="data">Data</th><th data-field="parceira">Parceira</th><th data-field="projeto">Projeto</th><th data-field="status">Status</th><th data-field="poweron">PowerON</th><th data-field="inicio">Início</th><th data-field="inconsistencia">Inconsistência</th><th data-field="atencao">Atenção</th></tr></thead>
+          <tbody data-draw="q-tabela"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg-sec" id="base" data-sec="base" hidden>
+    <div class="pg-card" id="card-base">
+      <h2>Base detalhada</h2>
+      <p class="note">Todas as programações do recorte. Clique no cabeçalho para ordenar; a busca procura em todas as colunas.</p>
+      <div class="pg-toolbar"><input class="d-search" type="search" placeholder="Buscar projeto, equipamento, PowerON, descrição…" aria-label="Buscar"><span class="cnt"><span data-draw="d-count" data-source="prog">—</span> registros</span></div>
+      <div class="pg-tablewrap">
+        <table data-source="prog" data-row-key="linha">
+          <thead><tr>
+            <th class="sortable num" data-field="linha" data-k="linha">Linha</th>
+            <th class="sortable" data-field="data" data-k="data">Data</th>
+            <th class="sortable" data-field="parceira" data-k="parceira">Parceira</th>
+            <th class="sortable" data-field="regiao" data-k="regiao">Região</th>
+            <th class="sortable" data-field="tipo" data-k="tipo">Tipo</th>
+            <th class="sortable" data-field="status" data-k="status">Status</th>
+            <th class="sortable" data-field="projeto" data-k="projeto">Projeto</th>
+            <th class="sortable" data-field="descricao" data-k="descricao">Descrição</th>
+            <th class="sortable" data-field="equipamento" data-k="equipamento">Equipamento</th>
+            <th class="sortable" data-field="poweron" data-k="poweron">PowerON</th>
+            <th class="sortable" data-field="inicio" data-k="inicio">Início</th>
+            <th class="sortable" data-field="fim" data-k="fim">Fim</th>
+            <th class="sortable num" data-field="janela_h" data-k="janela_h">Janela (h)</th>
+            <th class="sortable" data-field="contratada" data-k="contratada">Contratada</th>
+          </tr></thead>
+          <tbody data-draw="d-tabela"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <section class="pg-sec pg-proj" id="projetos">
+    <div class="pg-card" id="card-projetos">
+      <h2>Projetos do recorte</h2>
+      <p class="note">Um projeto por linha, agrupando todas as suas programações no recorte filtrado. Status mais recente = status da programação de data mais tardia. Clique no cabeçalho para ordenar.</p>
+      <div class="pg-toolbar"><input class="p-search" type="search" placeholder="Buscar projeto, descrição, região, PowerON…" aria-label="Buscar projeto"><span class="cnt"><span data-draw="p-count" data-source="prog">—</span> projetos</span></div>
+      <div class="pg-tablewrap">
+        <table data-source="prog">
+          <thead><tr>
+            <th class="p-sortable sortable" data-pk="projeto">Projeto</th>
+            <th class="p-sortable sortable" data-pk="descricao">Descrição</th>
+            <th class="p-sortable sortable" data-pk="parceira">Parceira</th>
+            <th class="p-sortable sortable" data-pk="regiao">Região</th>
+            <th class="p-sortable sortable" data-pk="tipo">Tipo</th>
+            <th class="p-sortable sortable num" data-pk="n">Programações</th>
+            <th class="p-sortable sortable num" data-pk="canc">Canceladas</th>
+            <th class="p-sortable sortable" data-pk="primeira">Primeira data</th>
+            <th class="p-sortable sortable" data-pk="ultima">Última data</th>
+            <th class="p-sortable sortable" data-pk="status">Status mais recente</th>
+            <th class="p-sortable sortable num" data-pk="horas">Janelas (h)</th>
+            <th class="p-sortable sortable" data-pk="poweron">PowerON</th>
+          </tr></thead>
+          <tbody data-draw="p-tabela"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+<p class="pg-foot">Fonte: Planilha1 de Dashboard_Programação_Parceiras_nov_jan.xlsx · 390 registros de 05/11 a 05/12/2026 · Gestão de Programação – Enel Brasil – Grids</p>
+</div>
+<script src="assets/d3.min.js"></script>
+<script src="data/programacoes.js"></script>
+<script src="assets/dash-shim.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
